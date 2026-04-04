@@ -1,15 +1,10 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { watch } from "vue";
 import { useNotificationStore } from "../store/notifications.store";
 import NotificationComponent from "./NotificationComponent.vue";
 
 const store = useNotificationStore();
 const { stack } = storeToRefs(store);
-
-watch(stack, (val) => {
-  console.log("stack cambió:", val);
-});
 </script>
 
 <template>
