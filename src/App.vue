@@ -17,7 +17,7 @@ onMounted(async () => {
     await client.connect();
     isConnected.value = true;
     client.on("message", (_, tags, message) => {
-      const isBot = tags["display-name"] === "gountzjs";
+      const isBot = tags["display-name"] === "gountzbot";
       if (!isBot) return;
       if (message.startsWith("!")) onCommand(message.slice(1));
     });

@@ -44,5 +44,6 @@ onUnmounted(() => {
 .container > p {
   font-family: var(--font-nunito);
   font-size: 18px;
+  text-align: center;
 }
 </style>
