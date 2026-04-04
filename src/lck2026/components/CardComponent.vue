@@ -8,10 +8,14 @@ interface Props {
 }
 
 const { cover, background } = defineProps<Props>();
+
+const emit = defineEmits<{
+  opened: [];
+}>();
 </script>
 
 <template>
-  <FlippedElement width="300px" height="450px" perspective="800px">
+  <FlippedElement width="300px" height="450px" perspective="800px" @flipped="emit('opened')">
     <template v-slot:front>
       <div
         :style="{
