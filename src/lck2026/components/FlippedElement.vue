@@ -16,6 +16,7 @@ const emit = defineEmits<{
 }>();
 
 const changeFlipped = () => {
+  if (isFlipped.value) return;
   isFlipped.value = true;
   emit("flipped");
 };

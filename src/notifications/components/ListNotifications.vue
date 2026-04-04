@@ -33,5 +33,6 @@ const { stack } = storeToRefs(store);
   right: 0;
   bottom: 0;
   position: fixed;
+  pointer-events: none;
 }
 </style>

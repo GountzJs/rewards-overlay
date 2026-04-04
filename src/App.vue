@@ -2,6 +2,8 @@
 import { Client } from "tmi.js";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useHandlerCommand } from "./app/hooks/handle-command";
+import AnimationPack from "./lck2026/components/AnimationPack.vue";
+import ListPacks from "./lck2026/components/ListPacks.vue";
 import ListNotifications from "./notifications/components/ListNotifications.vue";
 
 const { onCommand } = useHandlerCommand();
@@ -36,6 +38,8 @@ onUnmounted(async () => {
 <template>
   <main>
     <ListNotifications />
+    <ListPacks />
+    <AnimationPack />
   </main>
 </template>
 
