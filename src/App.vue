@@ -1,27 +1,41 @@
 <script setup lang="ts">
 import { Client } from "tmi.js";
-import { onMounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useHandlerCommand } from "./app/hooks/handle-command";
+import ListNotifications from "./notifications/components/ListNotifications.vue";
+
+const { onCommand } = useHandlerCommand();
 
 const client = new Client({
   channels: ["gountzbot"],
 });
 
-await client.connect();
+const isConnected = ref(false);
 
-client.on("message", (_, tags, message) => {
-  const isBot = tags["display-name"] === "gountzjs";
-  if (!isBot) return;
-  console.log(`${tags["display-name"]}: ${message}`);
+onMounted(async () => {
+  if (!isConnected.value) {
+    await client.connect();
+    isConnected.value = true;
+    client.on("message", (_, tags, message) => {
+      const isBot = tags["display-name"] === "gountzjs";
+      if (!isBot) return;
+      if (message.startsWith("!")) onCommand(message.slice(1));
+    });
+  }
 });
 
-onMounted(() => {
-  client.disconnect();
+onUnmounted(async () => {
+  if (isConnected.value) {
+    client.removeAllListeners();
+    await client.disconnect();
+  }
+  isConnected.value = false;
 });
 </script>
 
 <template>
   <main>
-    <h1>contenido</h1>
+    <ListNotifications />
   </main>
 </template>
 

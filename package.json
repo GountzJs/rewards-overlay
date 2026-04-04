@@ -16,12 +16,14 @@
   "dependencies": {
     "pinia": "^3.0.4",
     "tmi.js": "1.8.5",
+    "uuid": "13.0.0",
     "vue": "^3.5.31"
   },
   "devDependencies": {
     "@tsconfig/node24": "^24.0.4",
     "@types/node": "^24.12.0",
     "@types/tmi.js": "1.8.6",
+    "@types/uuid": "11.0.0",
     "@vitejs/plugin-vue": "^6.0.5",
     "@vue/eslint-config-typescript": "^14.7.0",
     "@vue/tsconfig": "^0.9.1",
