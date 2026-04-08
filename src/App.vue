@@ -46,8 +46,8 @@ onUnmounted(async () => {
 <style scoped>
 main {
   position: relative;
-  min-height: 100dvh;
-  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
   width: 100%;
 }
 

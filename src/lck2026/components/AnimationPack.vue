@@ -1,57 +1,52 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { onUnmounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useActivePackStore } from "../store/active-pack.store";
-import CardComponent from "./CardComponent.vue";
+import { useTimeout } from "../utils/timeout";
+import AnimationSobre from "./AnimationSobre.vue";
+import PreviewCards from "./PreviewCards.vue";
 
 const count = ref(0);
+const spread = ref(false);
+const moveSobre = ref(false);
+
 const storePack = useActivePackStore();
 const { pack } = storeToRefs(storePack);
-let removePackTimeout: ReturnType<typeof setTimeout> | null = null;
-const spread = ref(false);
+
+const { start: startSpread } = useTimeout(() => {
+  spread.value = true;
+}, 200);
+
+const { start: startRemovePack, stop: stopRemovePack } = useTimeout(() => {
+  moveSobre.value = false;
+  storePack.removePack();
+}, 2000);
 
 const addCount = () => {
   count.value = count.value + 1;
 };
 
-const onDropInEnd = () => {
-  spread.value = true;
+const handleOpened = () => {
+  moveSobre.value = true;
+  startSpread();
 };
 
 watch(pack, () => {
   count.value = 0;
   spread.value = false;
-  if (removePackTimeout) {
-    clearTimeout(removePackTimeout);
-    removePackTimeout = null;
-  }
+  stopRemovePack();
 });
 
 watch(count, (val) => {
-  if (val >= 3) {
-    removePackTimeout = setTimeout(() => {
-      storePack.removePack();
-    }, 2000);
-  }
-});
-
-onUnmounted(() => {
-  if (removePackTimeout) clearTimeout(removePackTimeout);
+  if (val >= 3) startRemovePack();
 });
 </script>
 
 <template>
   <div class="animation-container" :class="{ active: Boolean(pack) }">
-    <div v-if="pack" class="list-container" :class="{ spread }" @animationend="onDropInEnd">
-      <CardComponent
-        v-for="(card, index) in pack.cards"
-        :key="index"
-        :background="card.background"
-        :cover="card.cover"
-        :style="{ '--i': index }"
-        class="card-item"
-        @opened="addCount"
-      />
+    <div v-if="pack" class="container">
+      <PreviewCards :cards="pack.cards" :spread="spread" :card-width="300" @opened="addCount" />
+      <AnimationSobre class="sobre" :class="{ move: moveSobre }" @opened="handleOpened" />
     </div>
   </div>
 </template>
@@ -73,39 +68,27 @@ onUnmounted(() => {
   pointer-events: all;
 }
 
-.list-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: drop-in 1.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  transition: gap 0.6s ease-out;
-  gap: 0px;
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: drop-in 1s ease-in forwards;
 }
 
-.list-container.spread {
-  gap: 24px;
+.sobre {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes drop-in {
   from {
-    transform: translateY(-120vh);
+    top: -120vh;
   }
   to {
-    transform: translateY(0);
+    top: 50%;
   }
-}
-
-.card-item {
-  position: absolute;
-  transition: position 0.6s ease-out;
-}
-
-.spread .card-item {
-  position: relative;
-}
-
-.card-item:nth-child(2) {
-  z-index: 2;
 }
 </style>
