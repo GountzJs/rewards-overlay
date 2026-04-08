@@ -37,9 +37,15 @@ export const useHandlerCommand = () => {
 
     if (command === "notification") {
       const info = args?.split("-") || [];
-      if (info[0] !== "lck2026") return;
-      const username = info[2] as string;
-      getPack(username);
+      if (info[0] === "lck2026") {
+        const username = info[2] as string;
+        getPack(username);
+      }
+
+      if (info[0] === "ticket") {
+        const username = info[2] as string;
+        addMessage(`@${username}: Haz canjeado el ticket del enfrentamiento!`, "success");
+      }
     }
   };
 
