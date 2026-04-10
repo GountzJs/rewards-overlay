@@ -43,7 +43,7 @@ export const useHandlerCommand = () => {
       }
 
       if (info[0] === "ticket") {
-        const username = info[2] as string;
+        const username = info[3] as string;
         addMessage(`@${username}: Haz canjeado el ticket del enfrentamiento!`, "success");
       }
     }
